@@ -1,4 +1,4 @@
-//package ;
+package serialisation;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -22,7 +22,6 @@ public class SerialisationFramework {
 		
 		return os.toByteArray();
 	}
-	
 	
 	public Object readFromByteArray(byte[] b){
 		ByteArrayInputStream is = new ByteArrayInputStream(b);
