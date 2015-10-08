@@ -1,14 +1,33 @@
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.rmi.Naming;
 
+import remoteObjects.Universe;
 import remoteObjects.UniverseRemoteInterface;
 
+/**
+ * Class ClientSample to call the method with RMI.
+ * @author jeje
+ *
+ */
 public class ClientSample {
-	private void doOperation(String serviceName, String registryServerName){
+	private final String serviceName = "SearchSolution";
+	private String registryServerName;
+	
+	private void doOperation(){
 		try {
 			UniverseRemoteInterface universeProxy = (UniverseRemoteInterface)Naming.lookup("//" + registryServerName + "/" + serviceName);
 			
-			universeProxy.setValue0();
-			System.out.println("setValueO sended");
+			switch(Universe.chooseMethod()){
+			case 0:
+				System.out.println("Sending value 0 !");
+				universeProxy.setValue0();
+				break;
+			case 1:
+				universeProxy.setValue42();
+				System.out.println("Sending value 42 !");
+				break;
+			}
 		} catch (Exception e){
 			System.err.println("Exception:" + e.toString());
 			e.printStackTrace();
@@ -16,11 +35,17 @@ public class ClientSample {
 	}
 	
 	public static void main(String[] args){
+		if(args.length != 1){
+			System.out.println("You should give the server name in parameter.");
+			return;
+		}
+		
 		System.setSecurityManager(new SecurityManager());
-		String serviceName = "SearchSolution";
-		String registryServerName = args[0];
 		
 		ClientSample cl = new ClientSample();
-		cl.doOperation(serviceName, registryServerName);
+		cl.registryServerName = args[0];
+		
+		
+		cl.doOperation();
 	}
 }

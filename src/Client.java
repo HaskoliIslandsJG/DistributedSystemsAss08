@@ -7,10 +7,16 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
+import remoteObjects.Universe;
 import requests.ReplyRequest;
 import requests.RequestID;
 import serialisation.SerialisationFramework;
 
+/**
+ * Class Client to send UDP request.
+ * @author jeje
+ *
+ */
 public class Client {
 	private final static SerialisationFramework serialisationFramework = new SerialisationFramework();
 	private final static int maximumTries = 3;
@@ -29,7 +35,7 @@ public class Client {
 	private boolean doOperation() throws SocketTimeoutException {
 		try{
 			sendSocket = new DatagramSocket();
-			ReplyRequest replyRequest = new ReplyRequest(0, new RequestID(serverAdress, myPort), 0);
+			ReplyRequest replyRequest = new ReplyRequest(0, new RequestID(serverAdress, myPort), Universe.chooseMethod());
 			byte[] message = serialisationFramework.buildByteMessage(replyRequest);
 			
 			DatagramPacket request = new DatagramPacket(message, message.length, serverAdress, serverPort);
@@ -82,10 +88,7 @@ public class Client {
 		}
 		
 		
-		
-		Client mCLient = new Client();
-		
-			
+		Client mCLient = new Client();	
 		try {
 			mCLient.serverAdress = InetAddress.getByName(args[0]);
 		} catch (UnknownHostException e) {

@@ -80,7 +80,7 @@ public class Server {
 				int methodToCall = requestReceived.getMethodID();
 				if(methodToCall==0){
 					server.universe.setValue0();
-				}else if(methodToCall==42){
+				}else if(methodToCall==1){
 					server.universe.setValue42();
 				}
 				
