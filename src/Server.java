@@ -22,8 +22,8 @@ public class Server {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		
 	}
+	
 	public static void main(String args[]){
 		if(args.length != 1){
 			System.out.println("You should give one argument corresponding to the port number of the listening server (for the UDP server.");
@@ -31,12 +31,13 @@ public class Server {
 		}
 		
 		System.setSecurityManager(new SecurityManager());
-		try{
-			Universe universe = new Universe();
+		Server server = new Server();
 		
+		//Start RMI
+		try{
 			String registryServerName = "localhost";
 			String serviceName = "SearchSolution";
-			Naming.rebind("//" + registryServerName + "/" + serviceName, universe);
+			Naming.rebind("//" + registryServerName + "/" + serviceName, server.universe);
 			System.out.println("Binding ok !");
 			
 			
@@ -44,7 +45,9 @@ public class Server {
 			System.err.println("Exception:" + e.toString());
 			e.printStackTrace();
 		}
+		//RMI started
 		
+		//UDP server
 		DatagramSocket receiveSocket = null, answersocket = null;
 		SerialisationFramework serialisationFramework = new SerialisationFramework();
 		
@@ -57,7 +60,6 @@ public class Server {
 			 * buffer to fill the request
 			 */
 			byte[] buffer = new byte[ReplyRequest.size()];
-			Server server = new Server();
 			System.out.println("Listening UDP on port " + portNumber);
 			
 			/**
@@ -101,5 +103,6 @@ public class Server {
 			if (answersocket != null)
 				answersocket.close();
 		}
+		//End of UDP server.
 	}
 }
