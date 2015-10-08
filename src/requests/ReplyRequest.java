@@ -10,7 +10,7 @@ public class ReplyRequest implements Serializable {
 	
 	public static int size(){
 		try {
-			return new SerialisationFramework().buildByteMessage(new ReplyRequest(0, new requestID(InetAddress.getLocalHost(), 600000000), 100)).length;
+			return new SerialisationFramework().buildByteMessage(new ReplyRequest(0, new RequestID(InetAddress.getLocalHost(), 600000000), 100)).length;
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -23,11 +23,11 @@ public class ReplyRequest implements Serializable {
 	 */
 	private int messageType;
 	
-	private requestID requestID;
+	private RequestID requestID;
 	
 	private int methodID;
 
-	public ReplyRequest(int messageType, requests.requestID requestID, int methodID) {
+	public ReplyRequest(int messageType, requests.RequestID requestID, int methodID) {
 		super();
 		this.messageType = messageType;
 		this.requestID = requestID;
@@ -42,7 +42,7 @@ public class ReplyRequest implements Serializable {
 		this.messageType = messageType;
 	}
 
-	public requestID getRequestID() {
+	public RequestID getRequestID() {
 		return requestID;
 	}
 

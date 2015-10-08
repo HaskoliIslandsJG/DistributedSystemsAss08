@@ -4,9 +4,10 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.util.Calendar;
 
 import requests.ReplyRequest;
-import requests.requestID;
+import requests.RequestID;
 import serialisation.SerialisationFramework;
 
 public class Client {
@@ -26,28 +27,49 @@ public class Client {
 		}
 		
 		
-		DatagramSocket aSocket = null;
+		DatagramSocket sendSocket = null, receiveSocket = null;
 		SerialisationFramework serialisationFramework = new SerialisationFramework();
 		
 		try {
-			aSocket = new DatagramSocket();
+			sendSocket = new DatagramSocket();
 			InetAddress aHost = InetAddress.getByName(args[0]);
-			int serverPort = Integer.parseInt(args[1]);
+			int serverPort = Integer.parseInt(args[1]),
+					myPort = 6001;
 			
-			ReplyRequest replyRequest = new ReplyRequest(0, new requestID(aHost, serverPort), 0);
+			ReplyRequest replyRequest = new ReplyRequest(0, new RequestID(aHost, myPort), 0);
 			
 			byte[] message = serialisationFramework.buildByteMessage(replyRequest);
 			
 			DatagramPacket request = new DatagramPacket(message, message.length, aHost, serverPort);
-			aSocket.send(request);
+			sendSocket.send(request);
+			
+			//TODO : wait for the answer
+			boolean answer = false;
+			receiveSocket = new DatagramSocket(myPort);
+			
+			while(!answer){
+				DatagramPacket repliedDatagram = new DatagramPacket(message, message.length);
+				receiveSocket.setSoTimeout(3000);
+				receiveSocket.receive(repliedDatagram);
+				
+				ReplyRequest requestAnswer = (ReplyRequest)serialisationFramework.readFromByteArray(repliedDatagram.getData());
+				
+				if(requestAnswer.getRequestID().equals(replyRequest.getRequestID())){
+					System.out.println("Reply received !");
+					answer = true;
+				}
+			}
+			System.out.println("Nothing received !");
 			
 		} catch (SocketException e) {
 			System.out.println("Socket: " + e.getMessage());
 		} catch (IOException e) {
 			System.out.println("IO: " + e.getMessage());
 		} finally {
-			if (aSocket != null)
-				aSocket.close();
+			if (receiveSocket != null)
+				receiveSocket.close();
+			if (sendSocket != null)
+				sendSocket.close();
 		}
 	}
 }
