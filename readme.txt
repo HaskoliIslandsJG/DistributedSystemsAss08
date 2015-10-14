@@ -1,4 +1,4 @@
-Github repo : https://github.com/jeje42/HI-Distributed-Systems.git
+Github repo : https://github.com/HaskoliIslandsJG/DistributedSystemsAss08.git
 
 Both cases : cd into the bin directory.
 
@@ -8,12 +8,9 @@ Server : launch rmiregistry
 java -cp ./ -Djava.rmi.server.codebase=file:///./ -Djava.security.policy=../policy.txt Server portNumber
 
 2. Start on same machine client using (adjust classpath)
-java -cp ./  -Djava.security.policy=../policy.txt ClientSample localhost
 
-
-### Answer for part 2 :	###
-
-If no server is running, we can see the client does not react.
-This is what was expected using a UDP-based communication where the communication only takes place from the sender to the receiver.
-The sender does not receives any confirmation whatever the message has been received or not.
-
+	//For the client sample 
+	java -cp ./  -Djava.security.policy=../policy.txt ClientSample localhost
+	
+	//For the UDP client (with timeout of 3 seconds and 3 tries)
+	java -cp ./  -Djava.security.policy=../policy.txt Client localhost portNumber
